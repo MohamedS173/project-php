@@ -1,0 +1,159 @@
+@extends('layout')
+
+<style>
+    .editBasic{
+        background: darkgreen;
+        color: snow;
+        padding: 8px 18px;
+    }
+
+    .editAdvanced{
+        background: #002064;
+        color: snow;
+        padding: 8px;  
+    }
+</style>
+
+@section('content')
+
+
+<div class="overlay">
+
+    <div class="sk-cube-grid">
+        <div class="sk-cube sk-cube1"></div>
+        <div class="sk-cube sk-cube2"></div>
+        <div class="sk-cube sk-cube3"></div>
+        <div class="sk-cube sk-cube4"></div>
+        <div class="sk-cube sk-cube5"></div>
+        <div class="sk-cube sk-cube6"></div>
+        <div class="sk-cube sk-cube7"></div>
+        <div class="sk-cube sk-cube8"></div>
+        <div class="sk-cube sk-cube9"></div>
+    </div>
+
+</div>
+
+<div style="background-color:#3f783f;color:white;padding:10px;margin-bottom:20px;border-radius:3px;display:none;" id="successMsg">
+    Equipment Added Successfully!
+</div>
+
+<div class="alert alert-danger" role="alert" style="display:none;">
+    Failed To Add Equipment!!
+</div>
+
+
+<form action="/filterEquips" method="get" id="submitSearchEquipForm" onsubmit="submitSearchEquipForm(event)">
+    <input type="text" name="equip_sn" id="equip_sn" placeholder="Equip Sn">
+
+    <input type="submit" value="Search">
+</form>
+
+
+<div class="row">
+
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            
+
+            <div class="card-body">
+
+                <div class="row"><p><a href="/addNewEquip" class="editBasic" style="color: white;">New</a></p></div>
+
+                <br>
+                
+                <div class="row">
+                    <h6 class="card-title">Equipments</h6>
+                </div>
+
+                <div class="table-responsive">
+                    <div id="dataTableExample_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table id="dataTableExample" class="table dataTable no-footer" aria-describedby="dataTableExample_info">
+                                    <thead>
+                                        <tr>
+                                            <th class="sorting" tabindex="0" data-mytype="text" aria-controls="dataTableExample" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 271.484px;">SN</th>
+                                            <th class="sorting sorting_asc" tabindex="0" data-mytype="text" aria-controls="dataTableExample" rowspan="1" colspan="1" aria-label="Position: activate to sort column descending" aria-sort="ascending" style="width: 419.578px;">Equpment Name</th>
+                                            
+
+                                            <th class="sorting sorting_asc" data-mytype="actions" tabindex="0" aria-controls="dataTableExample" rowspan="1" colspan="1" aria-label="Position: activate to sort column descending" aria-sort="ascending" style="width: 419.578px;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="equipTableBody">
+
+                                        @foreach($equips as $equip)
+
+                                            <tr class="odd">
+
+                                                <td class="">{{$equip->equip_sn}}</td>
+                                                <td class="">{{$equip->equip_name}}</td>
+                            
+                        
+
+                                                <td>
+
+                                                    <a href="/editEquip/{{$equip->id}}" class="editAdvanced">Edit</a> 
+
+
+                                                </td>
+                                    
+                                            </tr>
+
+                                        @endforeach
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+   
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+   
+<script>
+
+function submitSearchEquipForm(e) {
+
+$(".overlay").show();
+
+//alert(e.target.value);
+e.preventDefault();
+//alert(55);
+
+$.ajax({
+    url: "/filterEquips",
+    type: "GET",
+    data: $("#submitSearchEquipForm").serialize(),
+    success: function(response) {
+        console.log(response);
+        //if (response == "done") {
+            $("#equipTableBody").html(response);
+            $(".overlay").hide();
+            $("#successMsg").show();
+        //}
+        
+    },
+    error: function(error) {
+        console.log(error);
+    }
+});
+
+}
+
+</script>
+
+
+@endsection

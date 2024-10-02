@@ -1,0 +1,45 @@
+public function filterEquips(Request $request)
+  {
+
+    if (session('userEmail') !== null) {
+
+      $viewData = $this->loadViewData();
+
+      $employee = EmpLoc::where("user_email",session('userEmail'))->get()[0];
+
+      $equips = equips::latest()->where('equip_sn',$request->equip_sn )->get();
+      //dd($equips);
+
+      $html = '';
+
+      foreach ($equips as $equip) {
+        $html .= "
+        <tr class='odd'>
+
+            <td>$equip->equip_sn</td>
+            <td>$equip->equip_name</td>
+
+
+
+            <td>
+
+            "
+            .
+
+                '<a href="/editEquip/' . $equip->id . '"' . "class='editAdvanced'>Edit</a>
+
+
+            </td>
+
+        </tr>
+        ";
+      }
+      
+
+      return $html;
+
+    }else{
+      return redirect('/signin');
+    }
+
+  }
